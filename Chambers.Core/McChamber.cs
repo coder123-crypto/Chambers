@@ -72,7 +72,6 @@ public sealed class McChamber
         lock (_locker)
         {
             _port.Close();
-            _port = null;
         }
     }
 
