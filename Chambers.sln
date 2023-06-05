@@ -3,9 +3,9 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Version 17
 VisualStudioVersion = 17.6.33723.286
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Chambers.Core", "Chambers.Core\Chambers.Core.csproj", "{6958CD36-77F4-4D2F-9B55-4BD9DA3427C8}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Chambers.Core", "Chambers.Core\Chambers.Core.csproj", "{6958CD36-77F4-4D2F-9B55-4BD9DA3427C8}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Chambers.Wpf", "Chambers.Wpf\Chambers.Wpf.csproj", "{189AD554-3175-4011-8803-4872F6F7E7EE}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Chambers.Wpf", "Chambers.Wpf\Chambers.Wpf.csproj", "{189AD554-3175-4011-8803-4872F6F7E7EE}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

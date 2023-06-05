@@ -165,6 +165,7 @@ public sealed partial class ChamberViewer
 
         View.Model.Series.Add(_monitoredSeries);
         View.Model.Series.Add(_targetSeries);
+        View.InvalidatePlot();
     }
 
     private void UpdateChart(object? sender, NotifyCollectionChangedEventArgs e)

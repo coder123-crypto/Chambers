@@ -22,7 +22,7 @@ namespace Chambers.Wpf.Properties {
     [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Resources.Tools.StronglyTypedResourceBuilder", "17.0.0.0")]
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
     [global::System.Runtime.CompilerServices.CompilerGeneratedAttribute()]
-    internal class Resources {
+    public class Resources {
         
         private static global::System.Resources.ResourceManager resourceMan;
         
@@ -36,7 +36,7 @@ namespace Chambers.Wpf.Properties {
         ///   Returns the cached ResourceManager instance used by this class.
         /// </summary>
         [global::System.ComponentModel.EditorBrowsableAttribute(global::System.ComponentModel.EditorBrowsableState.Advanced)]
-        internal static global::System.Resources.ResourceManager ResourceManager {
+        public static global::System.Resources.ResourceManager ResourceManager {
             get {
                 if (object.ReferenceEquals(resourceMan, null)) {
                     global::System.Resources.ResourceManager temp = new global::System.Resources.ResourceManager("Chambers.Wpf.Properties.Resources", typeof(Resources).Assembly);
@@ -51,7 +51,7 @@ namespace Chambers.Wpf.Properties {
         ///   resource lookups using this strongly typed resource class.
         /// </summary>
         [global::System.ComponentModel.EditorBrowsableAttribute(global::System.ComponentModel.EditorBrowsableState.Advanced)]
-        internal static global::System.Globalization.CultureInfo Culture {
+        public static global::System.Globalization.CultureInfo Culture {
             get {
                 return resourceCulture;
             }
@@ -63,7 +63,7 @@ namespace Chambers.Wpf.Properties {
         /// <summary>
         ///   Looks up a localized string similar to Разница.
         /// </summary>
-        internal static string Delta {
+        public static string Delta {
             get {
                 return ResourceManager.GetString("Delta", resourceCulture);
             }
@@ -72,7 +72,7 @@ namespace Chambers.Wpf.Properties {
         /// <summary>
         ///   Looks up a localized string similar to Текущая температура.
         /// </summary>
-        internal static string MonitoredTemperature {
+        public static string MonitoredTemperature {
             get {
                 return ResourceManager.GetString("MonitoredTemperature", resourceCulture);
             }
@@ -81,7 +81,7 @@ namespace Chambers.Wpf.Properties {
         /// <summary>
         ///   Looks up a localized string similar to Заданная температура.
         /// </summary>
-        internal static string TargetTemperature {
+        public static string TargetTemperature {
             get {
                 return ResourceManager.GetString("TargetTemperature", resourceCulture);
             }
@@ -90,7 +90,7 @@ namespace Chambers.Wpf.Properties {
         /// <summary>
         ///   Looks up a localized string similar to Температура.
         /// </summary>
-        internal static string Temperature {
+        public static string Temperature {
             get {
                 return ResourceManager.GetString("Temperature", resourceCulture);
             }
@@ -99,7 +99,7 @@ namespace Chambers.Wpf.Properties {
         /// <summary>
         ///   Looks up a localized string similar to Время.
         /// </summary>
-        internal static string Time {
+        public static string Time {
             get {
                 return ResourceManager.GetString("Time", resourceCulture);
             }

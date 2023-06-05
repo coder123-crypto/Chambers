@@ -1,4 +1,4 @@
-<Project Sdk="Microsoft.NET.Sdk">
+﻿<Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
     <TargetFramework>net7.0-windows</TargetFramework>
@@ -6,7 +6,7 @@
     <UseWPF>true</UseWPF>
     <PackageOutputPath>D:\Nuget</PackageOutputPath>
 	<GeneratePackageOnBuild Condition="'$(Configuration)' == 'Release'">True</GeneratePackageOnBuild>
-	<Version>2023.06.05.1031</Version>
+	<Version>2023.06.05.1106</Version>
   </PropertyGroup>
 
   <ItemGroup>
@@ -27,7 +27,7 @@
 
   <ItemGroup>
     <EmbeddedResource Update="Properties\Resources.resx">
-      <Generator>ResXFileCodeGenerator</Generator>
+      <Generator>PublicResXFileCodeGenerator</Generator>
       <LastGenOutput>Resources.Designer.cs</LastGenOutput>
     </EmbeddedResource>
   </ItemGroup>
