@@ -6,9 +6,9 @@
     <Nullable>enable</Nullable>
     <PackageOutputPath>D:\Nuget</PackageOutputPath>
 	<GeneratePackageOnBuild Condition="'$(Configuration)' == 'Release'">True</GeneratePackageOnBuild>
-	<Version>$([System.DateTime]::Now.ToString(yyyy.MM.dd)).$([System.DateTime]::Now.TimeOfDay.TotalMinutes.ToString("N0"))</Version>
+	<Version>2023.06.05.955</Version>
   </PropertyGroup>
-
+	
 	<ItemGroup>
     <PackageReference Include="System.IO.Ports" Version="7.0.0" />
   </ItemGroup>
