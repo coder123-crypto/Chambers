@@ -6,7 +6,7 @@
     <UseWPF>true</UseWPF>
     <PackageOutputPath>D:\Nuget</PackageOutputPath>
 	<GeneratePackageOnBuild Condition="'$(Configuration)' == 'Release'">True</GeneratePackageOnBuild>
-	<Version>2023.06.05.955</Version>
+	<Version>2023.06.05.1031</Version>
   </PropertyGroup>
 
   <ItemGroup>

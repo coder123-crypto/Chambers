@@ -20,16 +20,6 @@ public sealed class McChamber
         }
     }
 
-    public McRefMode RefMode
-    {
-        set => Request($"SET, REF {value}");
-    }
-
-    public McRegimeMode ChamberRegimeMode
-    {
-        set => Request($"MODE, {value.ToString().ToUpper()}");
-    }
-
     public IReadOnlyTemperaturePoint Temperature
     {
         get
@@ -100,8 +90,20 @@ public sealed class McChamber
         return true;
     }
 
-    public void GoTemp(double temp)
+    public void TurnOff()
     {
+        Request("MODE, STANDBY");
+    }
+
+    public void TurnOn()
+    {
+        Request("MODE, CONSTANT");
+    }
+
+    public void GoTemp(double temp, McRefMode refMode)
+    {
+        Request($"SET, REF{(int) refMode}");
+        Request("MODE, CONSTANT");
         Request($"TEMP, S{temp.ToString(InvariantCulture)}");
 
         IReadOnlyTemperaturePoint t;
@@ -111,9 +113,9 @@ public sealed class McChamber
         } while (Math.Abs(t.Target - temp) > 0.05);
     }
 
-    public void GoTemp(double temp, TimeSpan time)
+    public void GoTemp(double temp, TimeSpan time, McRefMode refMode)
     {
-        Request($"RUN PRGM, TEMP{Temperature.Monitored.ToString(InvariantCulture)} GOTEMP{temp.ToString(InvariantCulture)} TIME{time:hh\\:mm}");
+        Request($"RUN PRGM, TEMP{Temperature.Monitored.ToString(InvariantCulture)} GOTEMP{temp.ToString(InvariantCulture)} TIME{time:hh\\:mm} REF{(int) refMode}");
 
         for (int i = 0; i < 5; i++)
         {
