@@ -6,10 +6,11 @@
     <Nullable>enable</Nullable>
     <PackageOutputPath>D:\Nuget</PackageOutputPath>
 	<GeneratePackageOnBuild Condition="'$(Configuration)' == 'Release'">True</GeneratePackageOnBuild>
-	<Version>2023.06.05.1106</Version>
+	<Version>2023.07.06.922</Version>
   </PropertyGroup>
 	
 	<ItemGroup>
+    <PackageReference Include="Serial2Network.Core" Version="2023.7.6.807" />
     <PackageReference Include="System.IO.Ports" Version="7.0.0" />
   </ItemGroup>
 

@@ -1,5 +1,6 @@
 ﻿using System.IO.Ports;
 using System.Text.RegularExpressions;
+using Serial2Network.Core;
 using static System.Globalization.CultureInfo;
 
 namespace Chambers.Core;
@@ -10,7 +11,7 @@ public sealed class McChamber
     {
         get
         {
-            return Request("TYPE?") switch
+            return _info switch
             {
                 "T,SCP220,110.0" => "MC711",
                 "T,SCP220,190.0" => "MC811",
@@ -19,7 +20,8 @@ public sealed class McChamber
             };
         }
     }
-
+    private string _info = string.Empty;
+    
     public IReadOnlyTemperaturePoint Temperature
     {
         get
@@ -46,9 +48,8 @@ public sealed class McChamber
 
         lock (_locker)
         {
-            _port.PortName = port;
             _channel = channel;
-            _port.Open();
+            _client.Connect(port);
         }
     }
 
@@ -61,7 +62,7 @@ public sealed class McChamber
     {
         lock (_locker)
         {
-            _port.Close();
+            _client.Disconnect();
         }
     }
 
@@ -86,6 +87,8 @@ public sealed class McChamber
                 return false;
             }
         }
+
+        _info = Request("TYPE?");
 
         return true;
     }
@@ -138,8 +141,8 @@ public sealed class McChamber
         {
             try
             {
-                _port.WriteLine(output);
-                return _port.ReadLine().Trim();
+                _client.WriteLine(output);
+                return _client.ReadLine().Trim();
             }
             catch (Exception e)
             {
@@ -154,17 +157,20 @@ public sealed class McChamber
     }
 
     private readonly object _locker = new();
-    private SerialPort _port = new()
+    private readonly Client _client = new()
     {
-        BaudRate = 19200,
-        DataBits = 8,
-        Parity = Parity.None,
-        StopBits = StopBits.One,
-        Handshake = Handshake.RequestToSend,
-        ReadTimeout = 1000,
-        WriteTimeout = 1000,
-        ReadBufferSize = 4096,
-        WriteBufferSize = 4096
+        SerialPortOptions =
+        {
+            BaudRate = 19200,
+            DataBits = 8,
+            Parity = Parity.None,
+            StopBits = StopBits.One,
+            Handshake = Handshake.RequestToSend,
+            ReadTimeout = 1000,
+            WriteTimeout = 1000,
+            ReadBufferSize = 4096,
+            WriteBufferSize = 4096
+        }
     };
     private int _channel = -1;
 }
