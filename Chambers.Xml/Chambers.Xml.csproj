@@ -5,8 +5,8 @@
     <ImplicitUsings>enable</ImplicitUsings>
     <Nullable>enable</Nullable>
 	<PackageOutputPath>D:\Nuget</PackageOutputPath>
-	<GeneratePackageOnBuild Condition="'$(Configuration)' == 'Release'">True</GeneratePackageOnBuild>
-	<Version>2023.06.05.1106</Version>
+	<GeneratePackageOnBuild>True</GeneratePackageOnBuild>
+	<Version>2023.07.07.1623</Version>
   </PropertyGroup>
 
   <ItemGroup>

@@ -1,170 +1,90 @@
-﻿using System.IO.Ports;
-using System.Text.RegularExpressions;
-using static System.Globalization.CultureInfo;
-
-namespace Chambers.Core;
+﻿namespace Chambers.Core;
 
 public sealed class McChamber
 {
-    public string ChamberInfo
-    {
-        get
-        {
-            return Request("TYPE?") switch
-            {
-                "T,SCP220,110.0" => "MC711",
-                "T,SCP220,190.0" => "MC811",
-                "T,P-300,190.0" => "MC812",
-                _ => "Unknown Chamber"
-            };
-        }
-    }
+    public string ChamberInfo => _mc?.McInfo ?? string.Empty;
 
-    public IReadOnlyTemperaturePoint Temperature
-    {
-        get
-        {
-            try
-            {
-                return TemperatureRequest();
-            }
-            catch
-            {
-                return TemperatureRequest();
-            }
-        }
-    }
+    public IReadOnlyTemperaturePoint Temperature => _mc!.Temperature;
 
     ~McChamber()
     {
-        ClosePort();
+        Disconnect();
     }
 
-    public void OpenPort(string port, int channel)
+    public void Connect(string connectionString, int channel)
     {
-        ClosePort();
+        Disconnect();
 
         lock (_locker)
         {
-            _port.PortName = port;
-            _channel = channel;
-            _port.Open();
+            if (connectionString.StartsWith("COM"))
+            {
+                var serial = new Local.McChamber();
+                serial.Open(connectionString, channel);
+                _mc = serial;
+            }
+            else
+            {
+                string[] args = connectionString.Split(":");
+
+                var proto = new Remote.McChamber();
+                proto.Connect($"http://{args[0]}:{args[1]}");
+                proto.Open(args[2], channel);
+                _mc = proto;
+            }
         }
     }
 
-    public void OpenPort(string port)
+    public void Connect(string port)
     {
-        OpenPort(port, -1);
+        Connect(port, -1);
     }
 
-    public void ClosePort()
+    public void Disconnect()
     {
         lock (_locker)
         {
-            _port.Close();
+            _mc?.Close();
         }
     }
-
-    public bool ConnectToChamber()
-    {
-        try
-        {
-            Request("ROM?");
-        }
-        catch (TimeoutException)
-        {
-            try
-            {
-                string line = Request("ROM?");
-                if (!line.StartsWith("JMIC", StringComparison.Ordinal))
-                {
-                    return false;
-                }
-            }
-            catch (TimeoutException)
-            {
-                return false;
-            }
-        }
-
-        return true;
-    }
-
+    
     public void TurnOff()
     {
-        Request("MODE, STANDBY");
+        lock (_locker)
+        {
+            _mc!.TurnOff();
+        }
     }
 
     public void TurnOn()
     {
-        Request("MODE, CONSTANT");
+        lock (_locker)
+        {
+            _mc!.TurnOn();
+        }
     }
 
     public void GoTemp(double temp, McRefMode refMode)
     {
-        Request($"SET, REF{(int) refMode}");
-        Request("MODE, CONSTANT");
-        Request($"TEMP, S{temp.ToString(InvariantCulture)}");
+        _mc!.GoTemp(temp, refMode);
 
         IReadOnlyTemperaturePoint t;
         do
         {
-            t = TemperatureRequest();
+            t = Temperature;
         } while (Math.Abs(t.Target - temp) > 0.05);
     }
 
     public void GoTemp(double temp, TimeSpan time, McRefMode refMode)
     {
-        Request($"RUN PRGM, TEMP{Temperature.Monitored.ToString(InvariantCulture)} GOTEMP{temp.ToString(InvariantCulture)} TIME{time:hh\\:mm} REF{(int) refMode}");
+        _mc!.GoTemp(temp, time, refMode);
 
         for (int i = 0; i < 5; i++)
         {
-            TemperatureRequest();
+            _ = Temperature;
         }
-    }
-
-    private IReadOnlyTemperaturePoint TemperatureRequest()
-    {
-        string line = Request("TEMP?");
-        var g = Regex.Match(line, @"(-?\d+\.?\d*),(-?\d+\.?\d*),(-?\d+\.?\d*),(-?\d+\.?\d*)").Groups;
-        return new TemperaturePoint(DateTime.Now, double.Parse(g[1].ToString(), InvariantCulture), double.Parse(g[2].ToString(), InvariantCulture));
-    }
-
-    private string Request(string request)
-    {
-        string output = PrepareCommand(request);
-
-        lock (_locker)
-        {
-            try
-            {
-                _port.WriteLine(output);
-                return _port.ReadLine().Trim();
-            }
-            catch (Exception e)
-            {
-                throw new ChamberConnectionException($"КТХ не ответила на {output}", e);
-            }
-        }
-    }
-
-    private string PrepareCommand(string command)
-    {
-        return _channel == -1 ? command : $"{_channel}, {command}";
     }
 
     private readonly object _locker = new();
-    private SerialPort _port = new()
-    {
-        BaudRate = 19200,
-        DataBits = 8,
-        Parity = Parity.None,
-        StopBits = StopBits.One,
-        Handshake = Handshake.RequestToSend,
-        ReadTimeout = 1000,
-        WriteTimeout = 1000,
-        ReadBufferSize = 4096,
-        WriteBufferSize = 4096
-    };
-    private int _channel = -1;
+    private IMcChamber? _mc;
 }

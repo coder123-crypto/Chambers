@@ -1,0 +1,60 @@
+﻿syntax = "proto3";
+
+option csharp_namespace = "McService";
+
+package Mc;
+
+service McService {
+	rpc Open (OpenRequest) returns (Reply);
+	rpc Close (Request) returns (Reply);
+	rpc GetInfo (Request) returns (InfoReply);
+	rpc TurnOn (Request) returns (Reply);
+	rpc TurnOff (Request) returns (Reply);
+	rpc GoTemp (GoTempRequest) returns (Reply);
+	rpc GoTempLinerial (GoTempLinerialRequest) returns (Reply);
+	rpc GetTemperature (Request) returns (TemperatureReply);
+}
+
+message Request {
+}
+
+message OpenRequest {
+	string port_name = 1;
+	int32 channel = 2;
+}
+
+message Reply {
+	int32 status = 1;
+	string error = 2;
+}
+
+message InfoReply {
+	int32 status = 1;
+	string info = 2;
+	string error = 3;
+}
+
+message GoTempRequest {
+	double temperature = 1;
+	RefMode ref_mode = 3;
+}
+
+message GoTempLinerialRequest {
+	double temperature = 1;
+	int32 time = 2;
+	RefMode ref_mode = 3;
+}
+
+message TemperatureReply {
+	int32 status = 1;
+	double monitored = 2;
+	double target = 3;
+	string error = 4;
+}
+
+enum RefMode {
+	None = 0;
+	On = 1;
+	Off = 2;
+	Auto = 9;
+}
