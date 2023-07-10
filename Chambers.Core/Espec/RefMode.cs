@@ -1,6 +1,6 @@
-﻿namespace Chambers.Core;
+﻿namespace Chambers.Core.Espec;
 
-public enum McRefMode
+public enum RefMode
 {
     RefModeOn = 1,
     RefModeOff = 2,

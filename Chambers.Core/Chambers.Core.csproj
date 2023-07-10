@@ -11,21 +11,6 @@
 
 	<ItemGroup>
 		<PackageReference Include="System.IO.Ports" Version="7.0.0" />
-		<PackageReference Include="Google.Protobuf" Version="3.21.9" />
-		<PackageReference Include="Grpc.Net.Client" Version="2.50.0" />
-		<PackageReference Include="Grpc.Tools" Version="2.50.0">
-			<IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
-			<PrivateAssets>all</PrivateAssets>
-		</PackageReference>
-	</ItemGroup>
-
-	<ItemGroup>
-		<Protobuf Include="Protos\Mc.proto" GrpcServices="Client" />
-	</ItemGroup>
-
-	<ItemGroup>
-	  <Folder Include="Local\" />
-	  <Folder Include="Remote\" />
 	</ItemGroup>
 
 </Project>
