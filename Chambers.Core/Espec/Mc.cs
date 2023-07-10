@@ -1,10 +1,11 @@
-﻿using System.IO.Ports;
+﻿using System.Globalization;
+using System.IO.Ports;
 using System.Text.RegularExpressions;
 using static System.Globalization.CultureInfo;
 
-namespace Chambers.Core.Local;
+namespace Chambers.Core.Espec;
 
-public sealed class McChamber : IMcChamber
+public sealed class Mc
 {
     public string McInfo { get; set; } = string.Empty;
 
@@ -23,7 +24,7 @@ public sealed class McChamber : IMcChamber
         }
     }
 
-    ~McChamber()
+    ~Mc()
     {
         Close();
     }
@@ -71,9 +72,9 @@ public sealed class McChamber : IMcChamber
         Request("MODE, CONSTANT");
     }
 
-    public void GoTemp(double temp, McRefMode refMode)
+    public void GoTemp(double temp, RefMode refMode)
     {
-        Request($"SET, REF{(int) refMode}");
+        Request($"SET, REF{(int)refMode}");
         Request("MODE, CONSTANT");
         Request($"TEMP, S{temp.ToString(InvariantCulture)}");
 
@@ -84,9 +85,9 @@ public sealed class McChamber : IMcChamber
         } while (Math.Abs(t.Target - temp) > 0.05);
     }
 
-    public void GoTemp(double temp, TimeSpan time, McRefMode refMode)
+    public void GoTemp(double temp, TimeSpan time, RefMode refMode)
     {
-        Request($"RUN PRGM, TEMP{Temperature.Monitored.ToString(InvariantCulture)} GOTEMP{temp.ToString(InvariantCulture)} TIME{time:hh\\:mm} REF{(int) refMode}");
+        Request($"RUN PRGM, TEMP{Temperature.Monitored.ToString(InvariantCulture)} GOTEMP{temp.ToString(InvariantCulture)} TIME{time:hh\\:mm} REF{(int)refMode}");
 
         for (int i = 0; i < 5; i++)
         {
