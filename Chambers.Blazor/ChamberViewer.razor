@@ -1,0 +1,107 @@
+﻿@using SkiaSharp
+@using LiveChartsCore.Defaults
+@using LiveChartsCore.SkiaSharpView
+@using LiveChartsCore.SkiaSharpView.Painting
+@using LiveChartsCore.SkiaSharpView.Blazor
+@using LiveChartsCore
+@using System.Collections.ObjectModel
+@using Chambers.Core
+@using LiveChartsCore.Measure
+
+<CartesianChart Series="Series" XAxes="AxisX" YAxes="AxisY" TooltipPosition="TooltipPosition.Hidden"/>
+
+<style>
+    th, td {
+        text-align: left;
+        padding: 5px;
+        width: 16%;
+    }
+    input {
+        text-align: right;
+        width: 100%;
+        border-style: solid;
+        border-width: 1px;
+        border-radius: 5px;
+    }
+</style>
+
+<table width="100%">
+    <tr>
+        <th>Текущая температура:</th>
+        <td><input readonly="readonly" value=@_monitored.ToString("F2") /></td>
+        <th>Заданная температура:</th>
+        <td><input readonly="readonly" value=@_target.ToString("F2") /></td>
+        <th>Разница:</th>
+        <td><input readonly="readonly" value=@_delta.ToString("F2") /></td>
+    </tr>
+</table>
+
+@code
+{
+    public void Add(IReadOnlyTemperaturePoint point)
+    {
+        _monitoredPoints.Add(new DateTimePoint(point.Time, point.Monitored));
+        _targetPoints.Add(new DateTimePoint(point.Time, point.Target));
+        _monitored = point.Monitored;
+        _target = point.Target;
+        _delta = point.Target - point.Monitored;
+        StateHasChanged();
+    }
+
+    public void Clear()
+    {
+        _monitoredPoints.Clear();
+        _targetPoints.Clear();
+    }
+
+    public ChamberViewer()
+    {
+        Series[0].Values = _monitoredPoints;
+        Series[1].Values = _targetPoints;
+    }
+
+    private ISeries[] Series { get; } =
+        {
+            new LineSeries<DateTimePoint>
+            {
+                Fill = null,
+                Stroke = new SolidColorPaint(SKColors.DodgerBlue)
+                {
+                    StrokeThickness = 2.0f
+                },
+                GeometryStroke = null,
+                GeometrySize = 0.0,
+                LineSmoothness = 0.0
+            },
+            new LineSeries<DateTimePoint>
+            {
+                Fill = null,
+                Stroke = new SolidColorPaint(SKColors.Orange)
+                {
+                    StrokeThickness = 2.0f
+                },
+                GeometryStroke = null,
+                GeometrySize = 0.0,
+                LineSmoothness = 0.0
+            }
+        };
+
+    private Axis[] AxisX { get; } =
+        {
+            new()
+            {
+                Name = "Дата",
+                Labeler = x => new DateTime((long) x).ToShortTimeString(),
+                UnitWidth = TimeSpan.FromMinutes(1.0).Ticks,
+                MinStep = TimeSpan.FromSeconds(1.0).Ticks
+            }
+        };
+
+    private Axis[] AxisY { get; } = { new() { Name = "Температура" } };
+    
+    private readonly ICollection<DateTimePoint> _monitoredPoints = new ObservableCollection<DateTimePoint>();
+    private readonly ICollection<DateTimePoint> _targetPoints = new ObservableCollection<DateTimePoint>();
+    private double _monitored;
+    private double _target;
+    private double _delta;
+}
